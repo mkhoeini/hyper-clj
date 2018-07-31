@@ -1,6 +1,7 @@
 (ns hyper-clj.impl.h
   (:require
-    [hyper-clj.spec.vdom :as vdom]))
+    [hyper-clj.spec.vdom :as vdom]
+    [clojure.spec.alpha :as s]))
 
 
 (s/fdef h

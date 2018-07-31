@@ -1,4 +1,6 @@
-(ns hyper-clj.spec.vdom)
+(ns hyper-clj.spec.vdom
+ (:require
+  [clojure.spec.alpha :as s]))
 
 
 (s/def ::name (s/or :tag keyword?
