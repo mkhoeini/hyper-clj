@@ -2,8 +2,12 @@
   (:require
     [clojure.spec.alpha :as s]
     [hyper-clj.spec.vdom :as vdom]
-    [hyper-clj.spec.dom :as dom]))
+    [hyper-clj.spec.dom :as dom]
+    [hyper-clj.impl.dom :refer [update-attrs]]))
 
+
+(declare *global-state*)
+(declare wired-actions)
 
 (s/fdef fn->vdom
   :args (s/cat :node (s/or :fn fn? :vdom ::vdom/vdom))
@@ -12,9 +16,9 @@
 (defn fn->vdom
   [node]
   (let [vdom (if (fn? node)
-               (node global-state wired-actions)
-               node)])
-  (or vdom ""))
+               (node *global-state* wired-actions)
+               node)]
+    (or vdom "")))
 
 
 (defn- create-text-node
@@ -34,6 +38,7 @@
                :svg? boolean?)
   :ret ::dom/element)
 
+(declare *lifecycle*)
 (defn vdom->elem
   [node svg?]
   (let [node-name (::vdom/name node)
@@ -49,5 +54,5 @@
       (doseq [child (::vdom/children node)]
         (.appendChild elem (vdom->elem (fn->vdom child))))
       (doseq [[name attr] attrs]
-        (update-attribute elem name attr nil svg?)))
+        (update-attrs elem name attr nil svg?)))
     elem))
